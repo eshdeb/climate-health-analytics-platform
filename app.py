@@ -54,16 +54,28 @@ HOME_AFFILIATION = "REACH Project | London School of Hygiene & Tropical Medicine
 HOME_DESCRIPTION = "This platform brings together climate, hazard, exposure, risk, and health systems analytics in one integrated environment. It supports the exploration of flood, heat, drought, and multi-hazard patterns across Brazil and Zambia through reproducible workflows, interactive visualisation, workflow factsheets, and downloadable outputs for research, policy, and operational use."
 HOME_FEATURES = [
     "Interactive climate, hazard, exposure, risk, and susceptibility analytics",
-    "Brazil Flood, Brazil Heat, and Zambia Multi-Hazard workflows in one platform",
+    "Flood, heatwaves, and multi-hazard modules in one platform",
     "Workflow factsheets, variable dictionaries, and documentation",
     "Validation plots, trends, comparative visualisations, and mixed-axis charts",
     "Downloadable filtered data, figures, summary tables, and narrative PDF notes",
 ]
 PAGES = ["Home","Brazil Flood","Brazil Heat","Zambia Multi-Hazard","Custom Dataset Explorer","Run New Analysis","Documentation","Downloads","Author / Credits"]
+
+DISPLAY_PAGE_LABELS = {
+    "Home": "Home",
+    "Brazil Flood": "Flood",
+    "Brazil Heat": "Heatwaves",
+    "Zambia Multi-Hazard": "Multi-Hazard",
+    "Custom Dataset Explorer": "Custom Dataset Explorer",
+    "Run New Analysis": "Run New Analysis",
+    "Documentation": "Documentation",
+    "Downloads": "Downloads",
+    "Author / Credits": "Author / Credits",
+}
 WORKFLOW_META = {
-    "Brazil Flood": {"upload_label":"Upload Brazil Flood CSV or ZIP of CSVs","summary":"Municipality-level flood exposure and impact outputs for selected Brazil study areas.","workflow_file":"brazil_flood.md","metadata_file":"brazil_flood.json","area_candidates":["municipality","NM_MUN","state","CD_MUN"],"date_candidates":["date","Date","timestamp"],"year_candidates":["year","Year"],"month_candidates":["month","Month"],"banner_class":"flood-banner","card_class":"flood-top"},
-    "Brazil Heat": {"upload_label":"Upload Brazil Heat CSV or ZIP of CSVs","summary":"Municipality-level climate and heat-related outputs derived from daily temperature and humidity data.","workflow_file":"brazil_heat.md","metadata_file":"brazil_heat.json","area_candidates":["municipality","NM_MUN","CD_MUN"],"date_candidates":["date","Date","timestamp"],"year_candidates":["year","Year"],"month_candidates":["month","Month"],"banner_class":"heat-banner","card_class":"heat-top"},
-    "Zambia Multi-Hazard": {"upload_label":"Upload Zambia Multi-Hazard CSV or ZIP of CSVs","summary":"District-level daily and monthly climate-hazard outputs for exploring heat, flood, drought, compound events, and related indicators.","workflow_file":"zambia_multihazard.md","metadata_file":"zambia_multihazard.json","area_candidates":["DISTRICT","district","DIST_CODE","district_id"],"date_candidates":["date","Date","timestamp"],"year_candidates":["year","Year"],"month_candidates":["month","Month"],"banner_class":"multi-banner","card_class":"multi-top"},
+    "Brazil Flood": {"upload_label":"Upload Brazil Flood CSV or ZIP of CSVs","summary":"Flood analytics for exposure, impacts, and rainfall context across case-study or uploaded datasets.","workflow_file":"brazil_flood.md","metadata_file":"brazil_flood.json","area_candidates":["municipality","NM_MUN","state","CD_MUN"],"date_candidates":["date","Date","timestamp"],"year_candidates":["year","Year"],"month_candidates":["month","Month"],"banner_class":"flood-banner","card_class":"flood-top"},
+    "Brazil Heat": {"upload_label":"Upload Brazil Heat CSV or ZIP of CSVs","summary":"Heatwaves analytics for temperature, humidity, seasonality, and climate-health interpretation across case-study or uploaded datasets.","workflow_file":"brazil_heat.md","metadata_file":"brazil_heat.json","area_candidates":["municipality","NM_MUN","CD_MUN"],"date_candidates":["date","Date","timestamp"],"year_candidates":["year","Year"],"month_candidates":["month","Month"],"banner_class":"heat-banner","card_class":"heat-top"},
+    "Zambia Multi-Hazard": {"upload_label":"Upload Zambia Multi-Hazard CSV or ZIP of CSVs","summary":"Integrated multi-hazard analytics for flood, drought, heatwaves, compound events, and related indicators.","workflow_file":"zambia_multihazard.md","metadata_file":"zambia_multihazard.json","area_candidates":["DISTRICT","district","DIST_CODE","district_id"],"date_candidates":["date","Date","timestamp"],"year_candidates":["year","Year"],"month_candidates":["month","Month"],"banner_class":"multi-banner","card_class":"multi-top"},
     "Custom Dataset Explorer": {"upload_label":"Upload custom CSV or ZIP of CSVs","summary":"Flexible upload, visualisation, filtering, statistics, and download environment for user datasets and other countries.","workflow_file":"custom_dataset.md","metadata_file":"custom_dataset.json","area_candidates":["country","state","district","municipality","location","site"],"date_candidates":["date","Date","timestamp","datetime"],"year_candidates":["year","Year"],"month_candidates":["month","Month"],"banner_class":"custom-banner","card_class":"custom-top"},
 }
 AI_QUICK_GUIDE = {
@@ -245,28 +257,79 @@ def render_home():
     render_hero()
     st.markdown("### What this platform offers")
     st.markdown("".join(f'<span class="info-chip">{x}</span>' for x in HOME_FEATURES), unsafe_allow_html=True)
-    st.markdown("### Integrated workflows")
+    st.markdown("### Core analytics modules")
     cols = st.columns(4)
     cards = [
-        ("Brazil Flood","Explore municipality-level flood extent, rainfall context, exposed population, settlement exposure, infrastructure, and health facility indicators."),
-        ("Brazil Heat","Explore municipality-level temperature, humidity, seasonality, long-term trends, and climate-health analytics with user-selected variable combinations."),
-        ("Zambia Multi-Hazard","Explore district-level heat, flood, drought, compound-event metrics, MODIS flood summaries, risk classes, and susceptibility outputs."),
-        ("Custom Dataset Explorer","Upload and explore datasets from other countries or projects with flexible variable selection, plots, multi-axis support, and downloads.")
+        ("Brazil Flood","Flood module: explore flood extent, rainfall context, exposure, infrastructure, and health facility indicators using case-study or uploaded datasets."),
+        ("Brazil Heat","Heatwaves module: explore temperature, humidity, seasonality, long-term trends, and climate-health analytics with case-study or uploaded datasets."),
+        ("Zambia Multi-Hazard","Multi-Hazard module: explore flood, drought, and heatwave indicators, compound events, risk classes, and susceptibility outputs."),
+        ("Custom Dataset Explorer","Upload and explore datasets from any country or project with flexible variable selection, plots, multi-axis support, and downloads.")
     ]
     for col, (name, desc) in zip(cols, cards):
         meta = WORKFLOW_META[name]
         with col:
-            st.markdown(f'<div class="workflow-card {meta["card_class"]}"><h4>{name}</h4><p class="small-muted">{desc}</p></div>', unsafe_allow_html=True)
-            if st.button(f"Open {name}", use_container_width=True, key=f"home_{name}"):
+            st.markdown(f'<div class="workflow-card {meta["card_class"]}"><h4>{("Flood" if name=="Brazil Flood" else "Heatwaves" if name=="Brazil Heat" else "Multi-Hazard" if name=="Zambia Multi-Hazard" else name)}</h4><p class="small-muted">{desc}</p></div>', unsafe_allow_html=True)
+            home_label = ("Flood" if name=="Brazil Flood" else "Heatwaves" if name=="Brazil Heat" else "Multi-Hazard" if name=="Zambia Multi-Hazard" else name)
+            if st.button(f"Open {home_label}", use_container_width=True, key=f"home_{name}"):
                 st.session_state["page"] = name; st.rerun()
     st.markdown("### How to use this platform")
     st.markdown("1. Choose a workflow or open the custom explorer.\n2. Upload a CSV or ZIP dataset, or go to Run New Analysis for AOI-based extraction planning.\n3. Select place, dates, variables, plot type, aggregation, and optional secondary axis.\n4. Explore line plots, grouped bar charts, histograms, box plots, scatter plots, pie charts, heatmaps, and summary statistics.\n5. Open the factsheet to understand what the workflow is about, what it does, who can use it, and the main limitations.\n6. Download filtered CSV and narrative PDF outputs.")
     render_ai_box("Home")
-    st.markdown('<div class="note-box"><strong>Version 8:</strong> improved public-release logic, full country list for new analysis, stronger AI suggestions, and PDF downloads that include interpretation and take-home messages.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="note-box"><strong>Version 10:</strong> this is the final pre-backend public release. It presents generic hazard modules on the homepage and sidebar, while Brazil and Zambia are positioned as case-study examples inside the workflow pages and documentation. It supports demo datasets, user uploads, analysis, narrative PDF download, and AOI-based job specification before later backend engineering.</div>', unsafe_allow_html=True)
 
 def render_upload_block(page_name, meta):
     st.markdown("#### Data input")
-    st.markdown(f'<div class="upload-box"><strong>{meta["upload_label"]}</strong><br><span class="small-muted">Accepted: single CSV or ZIP containing one or more CSV files.</span></div>', unsafe_allow_html=True)
+    source = st.radio(
+        "Choose data source",
+        ["Use demo dataset", "Upload my own CSV or ZIP"],
+        key=f"source_{page_name}",
+        horizontal=False,
+    )
+
+    demo_map = {
+        "Brazil Flood": [
+            ("Recife flood showcase", "demo_brazil_flood.csv"),
+            ("Alternative flood showcase", "demo_brazil_flood_2.csv"),
+        ],
+        "Brazil Heat": [
+            ("Brazil heat showcase", "demo_brazil_heat.csv"),
+            ("Alternative heat showcase", "demo_brazil_heat_2.csv"),
+        ],
+        "Zambia Multi-Hazard": [
+            ("Zambia multi-hazard showcase", "demo_zambia_multihazard.csv"),
+            ("Zambia monthly showcase", "demo_zambia_multihazard_month.csv"),
+        ],
+        "Custom Dataset Explorer": [],
+    }
+
+    if source == "Use demo dataset":
+        demos = demo_map.get(page_name, [])
+        if demos:
+            demo_label = st.selectbox(
+                "Choose demo file",
+                [label for label, _ in demos],
+                key=f"demo_choice_{page_name}"
+            )
+            demo_name = dict(demos).get(demo_label)
+            demo_path = Path("sample_data") / demo_name
+            if demo_path.exists():
+                demo_df = pd.read_csv(demo_path)
+                st.session_state[f"data_{page_name}"] = demo_df
+                st.success(f"Loaded demo dataset: {demo_name} ({len(demo_df):,} rows)")
+                st.markdown(
+                    '<div class="note-box"><strong>Demo mode:</strong> this workflow is using a built-in showcase dataset from <code>sample_data/</code>. Brazil and Zambia are presented as case-study examples rather than the platform identity.</div>',
+                    unsafe_allow_html=True,
+                )
+            else:
+                st.warning(f"Demo dataset not found: {demo_name}. Add it to the sample_data folder or switch to upload mode.")
+        else:
+            st.info("No built-in demo dataset is configured for this page yet. Use upload mode.")
+        return st.session_state.get(f"data_{page_name}")
+
+    st.markdown(
+        f'<div class="upload-box"><strong>{meta["upload_label"]}</strong><br><span class="small-muted">Accepted: single CSV or ZIP containing one or more CSV files.</span></div>',
+        unsafe_allow_html=True
+    )
     uploaded = st.file_uploader(meta["upload_label"], type=["csv","zip"], key=f"upload_{page_name}")
     if uploaded is not None:
         parsed = parse_uploaded_table(uploaded)
@@ -422,13 +485,15 @@ def render_maps_for_explorer(page_name):
 
 def workflow_page(page_name):
     meta = WORKFLOW_META[page_name]
-    st.markdown(f'<div class="section-banner {meta["banner_class"]}"><h2 style="margin:0;">{page_name}</h2><div>{meta["summary"]}</div></div>', unsafe_allow_html=True)
+    banner_title = ("Flood" if page_name=="Brazil Flood" else "Heatwaves" if page_name=="Brazil Heat" else "Multi-Hazard" if page_name=="Zambia Multi-Hazard" else page_name)
+    case_note = ("Case study dataset: Brazil" if page_name in ["Brazil Flood","Brazil Heat"] else "Case study dataset: Zambia" if page_name=="Zambia Multi-Hazard" else "Global/custom upload module")
+    st.markdown(f'<div class="section-banner {meta["banner_class"]}"><h2 style="margin:0;">{banner_title}</h2><div>{meta["summary"]}<br><strong>{case_note}</strong></div></div>', unsafe_allow_html=True)
     left, right = st.columns([1.12,3.3], gap="large")
     with left:
         df = render_upload_block(page_name, meta)
     with right:
         if df is None:
-            st.markdown('<div class="white-card"><h4 style="margin-top:0;">Ready to explore</h4><p>Upload a CSV or ZIP file for this workflow to unlock filters, plots, summary tables, factsheets, variable dictionary, downloads, and AI-assisted interpretation.</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="white-card"><h4 style="margin-top:0;">Ready to explore</h4><p>Choose a demo dataset or upload a CSV/ZIP file to unlock filters, plots, summary tables, factsheets, variable dictionary, downloads, and AI-assisted interpretation.</p></div>', unsafe_allow_html=True)
         else:
             d, _ = prep_dataframe(df, meta)
             area_field = detect_area_field(d, meta["area_candidates"])
@@ -527,7 +592,11 @@ except Exception:
 
 def documentation_page():
     st.title("Documentation")
-    tabs = st.tabs(["Brazil Flood","Brazil Heat","Zambia Multi-Hazard","Custom Dataset Explorer"])
+    st.markdown(
+        '<div class="note-box"><strong>Case-study note:</strong> Brazil and Zambia are included in this platform as showcase applications and case-study datasets. The platform itself is designed as a broader climate–health and health systems analytics environment for wider national, subnational, and global use with uploaded data and future backend processing.</div>',
+        unsafe_allow_html=True
+    )
+    tabs = st.tabs(["Flood","Heatwaves","Multi-Hazard","Custom Dataset Explorer"])
     files = ["brazil_flood.md","brazil_heat.md","zambia_multihazard.md","custom_dataset.md"]
     for tab, fn in zip(tabs, files):
         with tab:
@@ -535,11 +604,15 @@ def documentation_page():
 
 def downloads_page():
     st.title("Downloads")
-    st.markdown("- Use the Explore tab in each workflow to download filtered CSV outputs.\n- Use the Explore tab to download narrative PDF outputs after choosing variables and filters.\n- Use Run New Analysis to download a job specification JSON for backend execution.\n- Future live-processing versions can add map PNG exports, classified risk layers, and workflow ZIP bundles.")
+    st.markdown("- Use the Explore tab in each workflow to download filtered CSV outputs.\n- Use the Explore tab to download narrative PDF outputs after choosing variables and filters.\n- Use Run New Analysis to download a job specification JSON for future backend execution.\n- This Version 10 release is the final pre-backend public version. Later engineering work can add live processing, map PNG exports, classified risk layers, and workflow ZIP bundles.")
 
 def author_page():
     st.title("Author / Credits")
     st.markdown(safe_read_text(Path("author_credit.md")))
+    st.markdown(
+        '<div class="note-box"><strong>Scope note:</strong> this release focuses on the public-facing analytics platform, demo workflows, upload-based exploration, documentation, and download features. Full backend engineering and live processing integration are intended as a later development phase.</div>',
+        unsafe_allow_html=True
+    )
 
 with st.sidebar:
     st.markdown("## Navigate")
@@ -547,8 +620,9 @@ with st.sidebar:
         st.session_state["page"] = "Home"
     for page in PAGES:
         wrapper = "nav-active" if st.session_state["page"] == page else "nav-wrap"
+        label = DISPLAY_PAGE_LABELS.get(page, page)
         st.markdown(f'<div class="{wrapper}">', unsafe_allow_html=True)
-        if st.button(page, use_container_width=True, key=f"nav_{page}"):
+        if st.button(label, use_container_width=True, key=f"nav_{page}"):
             st.session_state["page"] = page
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)

@@ -1,10 +1,13 @@
 # Custom Dataset Explorer
 
 ## Overview
-Custom Dataset Explorer allows users to upload their own climate, hazard, health, or health systems outputs and explore them through a flexible analytics interface.
+This module supports upload-based exploration of climate, hazard, health, or health systems datasets from any country or project.
 
 ## What this workflow does
-- uploads tabular outputs
-- allows user-defined variable selection
-- generates multiple plot types
-- downloads filtered outputs
+- uploads CSV or ZIP data
+- detects usable columns
+- supports flexible visualisation and downloads
+- supports narrative PDF summaries
+
+## Intended use
+This is the broadest module for national, subnational, and global use beyond the built-in case-study examples.
