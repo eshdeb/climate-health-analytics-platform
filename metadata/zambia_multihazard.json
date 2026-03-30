@@ -1,0 +1,10 @@
+{
+  "variables": [
+    {
+      "name": "SPI_3",
+      "label": "SPI-3",
+      "unit": "index",
+      "description": "Three-month Standardized Precipitation Index."
+    }
+  ]
+}

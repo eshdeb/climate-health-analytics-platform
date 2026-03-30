@@ -1,0 +1,10 @@
+{
+  "variables": [
+    {
+      "name": "user_selected",
+      "label": "User selected variable",
+      "unit": "varies",
+      "description": "Read directly from the uploaded dataset."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "variables": [
+    {
+      "name": "flood_pixel_count",
+      "label": "Flood pixel count",
+      "unit": "pixels",
+      "description": "Detected flood pixels."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "variables": [
+    {
+      "name": "mean_temperature_C",
+      "label": "Mean temperature",
+      "unit": "\u00b0C",
+      "description": "Area-weighted mean temperature."
+    }
+  ]
+}
